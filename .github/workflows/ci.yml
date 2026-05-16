@@ -2,33 +2,30 @@ name: GenAI Chatbot CI/CD
 
 on:
   push:
-      branches: [ main ]
-        pull_request:
-            branches: [ main ]
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
 
-            jobs:
-              test:
-                  name: Test and Lint
-                      runs-on: ubuntu-latest
-                          steps:
-                                - name: Checkout code
-                                        uses: actions/checkout@v4
-                                              - name: Set up Python
-                                                      uses: actions/setup-python@v4
-                                                              with:
-                                                                        python-version: '3.11'
-                                                                              - name: Install dependencies
-                                                                                      run: pip install -r requirements.txt flake8
-                                                                                            - name: Validate syntax
-                                                                                                    run: python -m py_compile app.py && echo "Syntax OK"
-                                                                                                    
-                                                                                                      deploy-info:
-                                                                                                          name: Deploy Info
-                                                                                                              runs-on: ubuntu-latest
-                                                                                                                  needs: test
-                                                                                                                      steps:
-                                                                                                                            - name: Deployment instructions
-                                                                                                                                    run: |
-                                                                                                                                              echo "Deploy to Streamlit Cloud at share.streamlit.io"
-                                                                                                                                                        echo "Repo: Nithinreddy8333/genai-chatbot"
-                                                                                                                                                                  echo "Main file: app.py"
+jobs:
+  test:
+    name: Test and Lint
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+      - name: Validate syntax
+        run: python -m py_compile app.py && echo OK
+
+  deploy-info:
+    name: Deploy Info
+    runs-on: ubuntu-latest
+    needs: test
+    steps:
+      - name: Show info
+        run: echo Deploy at share.streamlit.io
